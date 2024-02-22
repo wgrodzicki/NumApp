@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NumApp.MainPage"
+             BackgroundColor="#212529">
+
+    <ContentView>
+
+        <VerticalStackLayout
+            Padding="10, 20, 10, 10"
+            Spacing="25">
+
+            <Grid
+                RowDefinitions="*, *, *, *, *, *, *, *"
+                ColumnDefinitions="*, *, *, *">
+
+                <!--Row 0-->
+                <Entry
+                    Text="0"
+                    FontSize="40"
+                    HorizontalTextAlignment="End"
+                    MinimumHeightRequest="100"
+                    Margin="0, 0, 0, 5"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="4" />
+
+                <!--Row 1-->
+                <Button
+                    Text="↓"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="C"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="CE"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="DEL"
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+
+                <!--Row 2-->
+                <Button
+                    Text="Pow"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="Root"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="%"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="÷"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+
+                <!--Row 3-->
+                <Button
+                    Text="↑"
+                    IsVisible="false"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="Random"
+                    IsVisible="false"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="Hex"
+                    IsVisible="false"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="Binary"
+                    IsVisible="false"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+                <!--Row 4-->
+                <Button
+                    Text="7"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="8"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="9"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="×"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+                <!--Row 5-->
+                <Button
+                    Text="4"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="5"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="6"
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="-"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+                <!--Row 6-->
+                <Button
+                    Text="1"
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="2"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="3"
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="+"
+                    BackgroundColor="#6C2126"
+                    Grid.Row="6"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+                <!--Row 7-->
+                <Button
+                    Text="+/-"
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="0"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="."
+                    Grid.Row="7"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="1" />
+
+                <Button
+                    Text="="
+                    BackgroundColor="#6C2126"
+                    Grid.Row="7"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="1" />
+
+
+
+
+
+            </Grid>
+            
+            
+        </VerticalStackLayout>
+
+    </ContentView>
+
+</ContentPage>
