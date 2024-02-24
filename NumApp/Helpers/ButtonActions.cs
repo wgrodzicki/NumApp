@@ -3,7 +3,34 @@
 internal class ButtonActions
 {
     /// <summary>
-    /// Applies the action of the given operator and updates the operation entry and the operation label.
+    /// Clears input and values held by the calculator (all or current entry only).
+    /// </summary>
+    /// <param name="operationEntry"></param>
+    /// <param name="operationLabel"></param>
+    /// <param name="clearAll"></param>
+    internal static void ClearCalculator(Entry operationEntry, Label operationLabel, bool clearAll = false)
+    {
+        operationEntry.Text = "";
+
+        if (clearAll)
+        {
+            operationLabel.Text = "";
+            CalculatorPage.LastOperation = "";
+            CalculatorPage.CurrentValue = 0;
+        }
+    }
+
+    /// <summary>
+    /// Deletes the last character entered from the operation entry.
+    /// </summary>
+    /// <param name="operationEntry"></param>
+    internal static void Delete(Entry operationEntry)
+    {
+        operationEntry.Text = operationEntry.Text.Remove(operationEntry.Text.Length - 1);
+    }
+
+    /// <summary>
+    /// Validates input and applies the action of the given operator, updates the operation entry and the operation label.
     /// </summary>
     /// <param name="buttonOperator"></param>
     /// <param name="operationEntry"></param>
@@ -64,31 +91,23 @@ internal class ButtonActions
         CalculatorPage.LastOperation = "";
         CalculatorPage.CurrentValue = 0;
     }
-
+    
     /// <summary>
-    /// Clears input and values held by the calculator (all or current entry only).
+    /// Changes the sign of the value in the operation entry to the opposite, unless 0 or invalid.
     /// </summary>
     /// <param name="operationEntry"></param>
-    /// <param name="operationLabel"></param>
-    /// <param name="clearAll"></param>
-    internal static void ClearCalculator(Entry operationEntry, Label operationLabel, bool clearAll = false)
+    internal static void ChangeSign(Entry operationEntry)
     {
-        operationEntry.Text = "";
+        double input;
 
-        if (clearAll)
+        if (double.TryParse(operationEntry.Text, out input))
         {
-            operationLabel.Text = "";
-            CalculatorPage.LastOperation = "";
-            CalculatorPage.CurrentValue = 0;
+            input *= -1;
+            operationEntry.Text = input.ToString();
         }
-    }
-
-    /// <summary>
-    /// Deletes the last character entered from the operation entry.
-    /// </summary>
-    /// <param name="operationEntry"></param>
-    internal static void Delete(Entry operationEntry)
-    {
-        operationEntry.Text = operationEntry.Text.Remove(operationEntry.Text.Length - 1);
+        else
+        {
+            operationEntry.Text = "";
+        }
     }
 }

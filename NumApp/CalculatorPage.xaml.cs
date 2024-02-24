@@ -136,6 +136,16 @@ public partial class CalculatorPage : ContentPage
     }
 
     /// <summary>
+    /// Inverts the sign of the value in the operation entry.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnSignButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.ChangeSign(OperationEntry);
+    }
+
+    /// <summary>
     /// Displays the floating point in the operation entry.
     /// </summary>
     /// <param name="sender"></param>

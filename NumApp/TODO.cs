@@ -6,10 +6,10 @@
 // -> button for operations + numbers below ✓
 
 // Back-end:
-// -> addition
-// -> subtraction
-// -> multiplication
-// -> division
+// -> addition ✓
+// -> subtraction ✓
+// -> multiplication ✓
+// -> division ✓
 // -> write operations to JSON
 
 // Nice-to-have:

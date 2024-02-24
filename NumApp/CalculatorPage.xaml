@@ -255,7 +255,8 @@
                     Text="+/-"
                     Grid.Row="8"
                     Grid.Column="0"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnSignButtonClicked" />
 
                 <Button
                     x:Name="ZeroButton"
