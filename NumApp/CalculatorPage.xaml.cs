@@ -5,7 +5,7 @@ namespace NumApp;
 public partial class CalculatorPage : ContentPage
 {
     public static double CurrentValue { get; set; }
-    public static string CurrentOperation {  get; set; }
+    public static string LastOperation { get; set; }
 
     private bool _moreOptionsShown = false;
     private List<Button> moreOptionsButtons = new List<Button>();
@@ -48,77 +48,77 @@ public partial class CalculatorPage : ContentPage
 
     private void OnZeroButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(ZeroButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(ZeroButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnOneButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(OneButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(OneButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnTwoButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(TwoButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(TwoButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnThreeButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(ThreeButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(ThreeButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnFourButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(FourButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(FourButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnFiveButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(FiveButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(FiveButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnSixButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(SixButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(SixButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnSevenButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(SevenButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(SevenButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnEightButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(EightButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(EightButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnNineButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(NineButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(NineButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnAddButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(AddButton.Text, OperationEntry, OperationLabel, true);
+        ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnSubtractButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(SubtractButton.Text, OperationEntry, OperationLabel, true);
+        ButtonActions.ApplyOperator(SubtractButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnMultiplyButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(MultiplyButton.Text, OperationEntry, OperationLabel, true);
+        ButtonActions.ApplyOperator(MultiplyButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnDivideButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(DivideButton.Text, OperationEntry, OperationLabel, true);
+        ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnPointButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyButtonAction(PointButton.Text, OperationEntry, OperationLabel, false);
+        ButtonActions.DisplayNumber(PointButton.Text, OperationEntry, OperationLabel);
     }
 
     private void OnEqualsButtonClicked(object sender, EventArgs e)

@@ -2,66 +2,48 @@
 
 internal class ButtonActions
 {
-    internal static void ApplyButtonAction(string buttonText, Entry operationEntry, Label operationLabel, bool isSymbol)
+    internal static void ApplyOperator(string buttonText, Entry operationEntry, Label operationLabel)
     {
-        if (isSymbol)
+        if (String.IsNullOrWhiteSpace(operationEntry.Text))
         {
-            if (String.IsNullOrWhiteSpace(operationEntry.Text))
+            return;
+        }
+
+        double input;
+
+        if (double.TryParse(operationEntry.Text, out input))
+        {
+            if (String.IsNullOrEmpty(CalculatorPage.LastOperation))
             {
-                return;
-            }
-
-            double input;
-
-            if (double.TryParse(operationEntry.Text, out input))
-            {
-                CalculatorPage.CurrentOperation = buttonText;
-
-                if (String.IsNullOrEmpty(operationLabel.Text))
-                {
-                    PerformCalculation(buttonText, input);
-                }
-
-                operationLabel.Text += (operationEntry.Text + $" {buttonText} ");
-                operationEntry.Text = "";
+                CalculatorPage.CurrentValue = input;
             }
             else
             {
-                operationEntry.Text = "";
+                Operations.PerformCalculation(CalculatorPage.LastOperation, input);
             }
+            
+            CalculatorPage.LastOperation = buttonText;
+            operationLabel.Text += (operationEntry.Text + $" {buttonText} ");
+            operationEntry.Text = "";
         }
         else
         {
-            operationEntry.Text += $"{buttonText}";
+            operationEntry.Text = "";
         }
+    }
+
+    internal static void DisplayNumber(string buttonText, Entry operationEntry, Label operationLabel)
+    {
+        operationEntry.Text += $"{buttonText}";
     }
 
     internal static void DisplayResult(Entry operationEntry, Label operationLabel)
     {
-        ApplyButtonAction(CalculatorPage.CurrentOperation, operationEntry, operationLabel, true);
-        operationLabel.Text = "";
+        ApplyOperator("", operationEntry, operationLabel);
         operationEntry.Text = CalculatorPage.CurrentValue.ToString("N2");
-        CalculatorPage.CurrentValue = 0;
-    }
 
-    internal static void PerformCalculation(string operationType, double value)
-    {
-        switch (operationType)
-        {
-            case "+":
-                CalculatorPage.CurrentValue = Operations.Add(CalculatorPage.CurrentValue, value);
-                break;
-            case "-":
-                CalculatorPage.CurrentValue = Operations.Subtract(CalculatorPage.CurrentValue, value);
-                break;
-            case "×":
-                CalculatorPage.CurrentValue = Operations.Multiply(CalculatorPage.CurrentValue, value);
-                break;
-            case "÷":
-                CalculatorPage.CurrentValue = Operations.Divide(CalculatorPage.CurrentValue, value);
-                break;
-            default:
-                break;
-        }
+        operationLabel.Text = "";
+        CalculatorPage.LastOperation = "";
+        CalculatorPage.CurrentValue = 0;
     }
 }
