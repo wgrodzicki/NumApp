@@ -51,7 +51,8 @@
                     FontSize="14"
                     Grid.Row="2"
                     Grid.Column="1"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnClearButtonClicked" />
 
                 <Button
                     x:Name="ClearEntryButton"
@@ -59,7 +60,8 @@
                     FontSize="14"
                     Grid.Row="2"
                     Grid.Column="2"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnClearEntryButtonClicked" />
 
                 <Button
                     x:Name="DeleteButton"
@@ -67,9 +69,9 @@
                     FontSize="14"
                     Grid.Row="2"
                     Grid.Column="3"
-                    Grid.ColumnSpan="1" />
-
-
+                    Grid.ColumnSpan="1"
+                    Clicked="OnDeleteButtonClicked" />
+                
                 <!--Row 3-->
                 <Button
                     x:Name="SaveButton"
