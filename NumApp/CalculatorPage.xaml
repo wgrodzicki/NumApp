@@ -98,7 +98,8 @@
                     IsVisible="false"
                     Grid.Row="3"
                     Grid.Column="2"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnHexButtonClicked" />
 
                 <Button
                     x:Name="BinaryButton"
@@ -112,27 +113,30 @@
                 <!--Row 4-->
                 <Button
                     x:Name="SquareButton"
-                    Text="Square"
+                    Text="x^2"
                     FontSize="14"
                     Grid.Row="4"
                     Grid.Column="0"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnSquareButtonClicked" />
 
                 <Button
                     x:Name="SqrtButton"
-                    Text="√"
-                    FontSize="20"
+                    Text="√x"
+                    FontSize="14"
                     Grid.Row="4"
                     Grid.Column="1"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnSqrtButtonClicked" />
 
                 <Button
-                    x:Name="PercentButton"
+                    x:Name="PercentageButton"
                     Text="%"
                     FontSize="20"
                     Grid.Row="4"
                     Grid.Column="2"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnPercentageButtonClicked" />
 
                 <Button
                     x:Name="DivideButton"

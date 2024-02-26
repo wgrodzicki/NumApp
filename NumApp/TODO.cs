@@ -14,7 +14,7 @@
 
 // Nice-to-have:
 // -> random generator
-// -> power
-// -> root
-// -> to hex
+// -> power ✓
+// -> root ✓
+// -> to hex ✓
 // -> to binary

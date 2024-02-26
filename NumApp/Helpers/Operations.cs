@@ -1,4 +1,6 @@
-﻿namespace NumApp.Helpers;
+﻿using System.Collections;
+
+namespace NumApp.Helpers;
 
 internal class Operations
 {
@@ -6,6 +8,11 @@ internal class Operations
     private const string Subtraction = "-";
     private const string Multiplication = "×";
     private const string Division = "÷";
+    private const string Square = "x^2";
+    private const string SquareRoot = "√x";
+    private const string Percentage = "%";
+    private const string Hexadecimal = "Hex";
+    private const string Binary = "Bin";
 
     /// <summary>
     /// Returns the sum of the two given numbers.
@@ -52,6 +59,85 @@ internal class Operations
     }
 
     /// <summary>
+    /// Returns the square of the given number.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    internal static double GetSquare(double x)
+    {
+        return Math.Pow(x, 2);
+    }
+
+    /// <summary>
+    /// Returns the square root of the given number.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    internal static double GetSquareRoot(double x)
+    {
+        return Math.Sqrt(x);
+    }
+
+    /// <summary>
+    /// Returns the given number multiplied by 100.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    internal static double GetPercentage(double x)
+    {
+        return x * 100.0;
+    }
+
+    /// <summary>
+    /// Returns the given number converted to hexadecimal (only integers allowed).
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    internal static string GetHex(double x)
+    {
+        string input = x.ToString();
+
+        if (input.Contains('.'))
+        {
+            return "Only integers";
+        }
+
+        string hexReversed = "";
+        int y = (int)x;
+
+        while (true)
+        {
+            int remainder = y % 16;
+            string hexRemainder = remainder.ToString();
+
+            hexRemainder = hexRemainder switch
+            {
+                "15" => "F",
+                "14" => "E",
+                "13" => "D",
+                "12" => "C",
+                "11" => "B",
+                "10" => "A",
+                _ => hexRemainder
+            };
+            hexReversed += hexRemainder;
+
+            y /= 16;
+
+            if (y < 1)
+            {
+                break;
+            }
+        }
+
+        char[] hexReversedArray = hexReversed.ToCharArray();
+        Array.Reverse(hexReversedArray);
+        string hexConverted = new string(hexReversedArray);
+
+        return $"0x{hexConverted}";
+    }
+
+    /// <summary>
     /// Performs the given calculation on the current value held by the calcultor and the value given.
     /// </summary>
     /// <param name="operationType"></param>
@@ -75,6 +161,37 @@ internal class Operations
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// Updates the content of the operation entry depending on the operation.
+    /// </summary>
+    /// <param name="operationType"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    internal static void UpdateOperationEntryValue(Entry operationEntry, string operationType, double value)
+    {
+        switch (operationType)
+        {
+            case Square:
+                operationEntry.Text = GetSquare(value).ToString();
+                break;
+            case SquareRoot:
+                operationEntry.Text = GetSquareRoot(value).ToString();
+                break;
+            case Percentage:
+                operationEntry.Text = GetPercentage(value).ToString();
+                break;
+            case Hexadecimal:
+                operationEntry.Text = GetHex(value);
+                break;
+            case Binary:
+                break;
+            default:
+                break;
+        }
+        // To be removed:
+        //return value;
     }
 }
 

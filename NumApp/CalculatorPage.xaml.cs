@@ -42,12 +42,14 @@ public partial class CalculatorPage : ContentPage
         if (!_moreOptionsShown)
         {
             this.Window.Height += SaveButton.MinimumHeightRequest;
+            this.Window.MinimumHeight += SaveButton.MinimumHeightRequest;
             _moreOptionsShown = true;
             MoreButton.Text = "↑";
             ShowMoreOptions(true);
         }
         else
         {
+            this.Window.MinimumHeight -= SaveButton.MinimumHeightRequest;
             this.Window.Height -= SaveButton.MinimumHeightRequest;
             _moreOptionsShown = false;
             MoreButton.Text = "↓";
@@ -86,27 +88,47 @@ public partial class CalculatorPage : ContentPage
     }
 
     /// <summary>
-    /// Applies addition of the content of the operation label and the operation label.
+    /// Applies the power of 2 to the content of the operation entry.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnAddButtonClicked(object sender, EventArgs e)
+    private void OnSquareButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel);
+        ButtonActions.SingleVariableOperation(OperationEntry, SquareButton.Text);
     }
 
     /// <summary>
-    /// Applies subtraction of the content of the operation label and the operation label.
+    /// Applies square root to the content of the operation entry.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnSubtractButtonClicked(object sender, EventArgs e)
+    private void OnSqrtButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyOperator(SubtractButton.Text, OperationEntry, OperationLabel);
+        ButtonActions.SingleVariableOperation(OperationEntry, SqrtButton.Text);
     }
 
     /// <summary>
-    /// Applies multiplication of the content of the operation label and the operation label.
+    /// Convert the content of the operation entry to a percentage.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnPercentageButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.SingleVariableOperation(OperationEntry, PercentageButton.Text);
+    }
+
+    /// <summary>
+    /// Applies division to the content of the operation entry and the operation label.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnDivideButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel);
+    }
+
+    /// <summary>
+    /// Applies multiplication to the content of the operation entry and the operation label.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -116,13 +138,23 @@ public partial class CalculatorPage : ContentPage
     }
 
     /// <summary>
-    /// Applies division of the content of the operation label and the operation label.
+    /// Applies subtraction to the content of the operation entry and the operation label.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnDivideButtonClicked(object sender, EventArgs e)
+    private void OnSubtractButtonClicked(object sender, EventArgs e)
     {
-        ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel);
+        ButtonActions.ApplyOperator(SubtractButton.Text, OperationEntry, OperationLabel);
+    }
+
+    /// <summary>
+    /// Applies addition to the content of the operation entry and the operation label.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnAddButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel);
     }
 
     /// <summary>
@@ -253,5 +285,10 @@ public partial class CalculatorPage : ContentPage
     private void OnNineButtonClicked(object sender, EventArgs e)
     {
         ButtonActions.DisplayNumber(NineButton.Text, OperationEntry);
+    }
+
+    private void OnHexButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.SingleVariableOperation(OperationEntry, HexButton.Text);
     }
 }

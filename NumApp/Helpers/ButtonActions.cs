@@ -26,7 +26,10 @@ internal class ButtonActions
     /// <param name="operationEntry"></param>
     internal static void Delete(Entry operationEntry)
     {
-        operationEntry.Text = operationEntry.Text.Remove(operationEntry.Text.Length - 1);
+        if (!String.IsNullOrEmpty(operationEntry.Text))
+        {
+            operationEntry.Text = operationEntry.Text.Remove(operationEntry.Text.Length - 1);
+        }
     }
 
     /// <summary>
@@ -46,6 +49,12 @@ internal class ButtonActions
 
         if (double.TryParse(operationEntry.Text, out input))
         {
+            if (CalculatorPage.LastOperation == "÷" && input == 0)
+            {
+                operationEntry.Text = "Error";
+                return;
+            }
+
             if (String.IsNullOrEmpty(CalculatorPage.LastOperation))
             {
                 CalculatorPage.CurrentValue = input;
@@ -55,7 +64,7 @@ internal class ButtonActions
                 Operations.PerformCalculation(CalculatorPage.LastOperation, input);
             }
             
-            // Updatr the last operation to this operator
+            // Update the last operation to this operator
             CalculatorPage.LastOperation = buttonOperator;
 
             operationLabel.Text += (operationEntry.Text + $" {buttonOperator} ");
@@ -84,8 +93,24 @@ internal class ButtonActions
     /// <param name="operationLabel"></param>
     internal static void DisplayResult(Entry operationEntry, Label operationLabel)
     {
+        double input;
+
+        if (!double.TryParse(operationEntry.Text, out input))
+        {
+            operationEntry.Text = "";
+            return;
+        }
+
         ApplyOperator("", operationEntry, operationLabel);
-        operationEntry.Text = CalculatorPage.CurrentValue.ToString("N2");
+
+        if (CalculatorPage.LastOperation == "÷" && input == 0)
+        {
+            operationEntry.Text = "Error";
+        }
+        else
+        {
+            operationEntry.Text = CalculatorPage.CurrentValue.ToString();
+        }
 
         operationLabel.Text = "";
         CalculatorPage.LastOperation = "";
@@ -102,8 +127,30 @@ internal class ButtonActions
 
         if (double.TryParse(operationEntry.Text, out input))
         {
-            input *= -1;
+            if (input != 0)
+            {
+                input *= -1;
+            }
             operationEntry.Text = input.ToString();
+        }
+        else
+        {
+            operationEntry.Text = "";
+        }
+    }
+
+    /// <summary>
+    /// Handles operations that involve only the content of the operation entry.
+    /// </summary>
+    /// <param name="operationEntry"></param>
+    /// <param name="operation"></param>
+    internal static void SingleVariableOperation(Entry operationEntry, string operation)
+    {
+        double input;
+
+        if (double.TryParse(operationEntry.Text, out input))
+        {
+            Operations.UpdateOperationEntryValue(operationEntry, operation, input);
         }
         else
         {
