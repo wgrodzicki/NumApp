@@ -182,6 +182,13 @@ internal class ButtonActions
             return false;
         }
 
+        if (inputTo < inputFrom)
+        {
+            randomEntryFrom.Text = "";
+            randomEntryTo.Text = "";
+            return false;
+        }
+
         CalculatorPage.CurrentValue = Operations.GetRandom(inputFrom, inputTo);
         return true;
     }
