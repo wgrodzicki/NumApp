@@ -13,8 +13,8 @@
 // -> write operations to JSON
 
 // Nice-to-have:
-// -> random generator
+// -> random generator ✓
 // -> power ✓
 // -> root ✓
 // -> to hex ✓
-// -> to binary
+// -> to binary ✓

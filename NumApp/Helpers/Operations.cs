@@ -89,11 +89,11 @@ internal class Operations
     }
 
     /// <summary>
-    /// Returns the given number converted to hexadecimal (only integers allowed).
+    /// Returns the given decimal number converted to hexadecimal (only integers allowed).
     /// </summary>
     /// <param name="x"></param>
     /// <returns></returns>
-    internal static string GetHex(double x)
+    internal static string GetHexadecimal(double x)
     {
         string input = x.ToString();
 
@@ -103,11 +103,11 @@ internal class Operations
         }
 
         string hexReversed = "";
-        int y = (int)x;
+        int xInt = (int)x;
 
         while (true)
         {
-            int remainder = y % 16;
+            int remainder = xInt % 16;
             string hexRemainder = remainder.ToString();
 
             hexRemainder = hexRemainder switch
@@ -122,9 +122,9 @@ internal class Operations
             };
             hexReversed += hexRemainder;
 
-            y /= 16;
+            xInt /= 16;
 
-            if (y < 1)
+            if (xInt < 1)
             {
                 break;
             }
@@ -135,6 +135,60 @@ internal class Operations
         string hexConverted = new string(hexReversedArray);
 
         return $"0x{hexConverted}";
+    }
+
+    /// <summary>
+    /// Returns the given decimal number converted to binary (only integers allowed).
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    internal static string GetBinary(double x)
+    {
+        string input = x.ToString();
+
+        if (input.Contains('.'))
+        {
+            return "Only integers";
+        }
+
+        string binReversed = "";
+        int xInt = (int)x;
+
+        while (true)
+        {
+            int remainder = xInt % 2;
+            binReversed += remainder.ToString();
+
+            xInt /= 2;
+
+            if (xInt <= 1)
+            {
+                binReversed += "1";
+                break;
+            }
+        }
+
+        char[] binReversedArray = binReversed.ToCharArray();
+        Array.Reverse(binReversedArray);
+        string binConverted = new string(binReversedArray);
+
+        return $"0b{binConverted}";
+    }
+    
+    /// <summary>
+    /// Returns a random integer between x and y (inclusive).
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    internal static int GetRandom(double x, double y)
+    {
+        int xInt = (int)x;
+        int yInt = (int)y;
+        
+        Random random = new Random();
+        int result = random.Next(xInt, yInt + 1);
+        return result;
     }
 
     /// <summary>
@@ -183,15 +237,14 @@ internal class Operations
                 operationEntry.Text = GetPercentage(value).ToString();
                 break;
             case Hexadecimal:
-                operationEntry.Text = GetHex(value);
+                operationEntry.Text = GetHexadecimal(value);
                 break;
             case Binary:
+                operationEntry.Text = GetBinary(value);
                 break;
             default:
                 break;
         }
-        // To be removed:
-        //return value;
     }
 }
 

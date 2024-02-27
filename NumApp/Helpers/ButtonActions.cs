@@ -33,7 +33,7 @@ internal class ButtonActions
     }
 
     /// <summary>
-    /// Validates input and applies the action of the given operator, updates the operation entry and the operation label.
+    /// Applies the action of the given operator, updates the operation entry and the operation label.
     /// </summary>
     /// <param name="buttonOperator"></param>
     /// <param name="operationEntry"></param>
@@ -118,7 +118,7 @@ internal class ButtonActions
     }
     
     /// <summary>
-    /// Changes the sign of the value in the operation entry to the opposite, unless 0 or invalid.
+    /// Changes the sign of the value in the operation entry to the opposite.
     /// </summary>
     /// <param name="operationEntry"></param>
     internal static void ChangeSign(Entry operationEntry)
@@ -144,7 +144,7 @@ internal class ButtonActions
     /// </summary>
     /// <param name="operationEntry"></param>
     /// <param name="operation"></param>
-    internal static void SingleVariableOperation(Entry operationEntry, string operation)
+    internal static void ApplySingleVariableOperation(Entry operationEntry, string operation)
     {
         double input;
 
@@ -156,5 +156,33 @@ internal class ButtonActions
         {
             operationEntry.Text = "";
         }
+    }
+
+    /// <summary>
+    /// Generates a random number between the content of the random entry from and the conent of the random entry to (inclusive).
+    /// </summary>
+    /// <param name="randomEntryFrom"></param>
+    /// <param name="randomEntryTo"></param>
+    internal static bool GenerateRandom(Entry randomEntryFrom, Entry randomEntryTo)
+    {
+        double inputFrom;
+        double inputTo;
+
+        if (!double.TryParse(randomEntryFrom.Text, out inputFrom))
+        {
+            randomEntryFrom.Text = "";
+            randomEntryTo.Text = "";
+            return false;
+        }
+
+        if (!double.TryParse(randomEntryTo.Text, out inputTo))
+        {
+            randomEntryFrom.Text = "";
+            randomEntryTo.Text = "";
+            return false;
+        }
+
+        CalculatorPage.CurrentValue = Operations.GetRandom(inputFrom, inputTo);
+        return true;
     }
 }
