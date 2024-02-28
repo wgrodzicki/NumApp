@@ -6,7 +6,11 @@ public partial class CalculatorPage : ContentPage
 {
     public static double CurrentValue { get; set; }
     public static string LastOperation { get; set; }
+    public static List<string> Operations { get; set; }
+    public static int DecimalPrecision { get; set; }
+
     public bool RandomOn { get; set; }
+    public bool DecimalPrecisionOn { get; set; }
 
     private bool _moreOptionsShown = false;
     private List<Button> moreOptionsButtons = new List<Button>();
@@ -21,10 +25,67 @@ public partial class CalculatorPage : ContentPage
 
         CurrentValue = 0;
         LastOperation = "";
+        Operations = new List<string>();
+        DecimalPrecision = 0;
+
         RandomOn = false;
+        DecimalPrecisionOn = false;
         moreOptionsButtons = new List<Button>() { SaveButton, RandomButton, HexButton, BinButton };
+
+        SaveButton.IsEnabled = false;
+        OperationEntry.Loaded += (s, e) => { OperationEntry.Focus(); };
     }
-    
+
+    /// <summary>
+    /// Handles direct keyboard input in the operation entry.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void CheckKeyboardInput(object sender, EventArgs e)
+    {
+        if (RandomOn)
+            return;
+
+        if (DecimalPrecisionOn)
+            return;
+
+        if (String.IsNullOrEmpty(OperationEntry.Text))
+            return;
+
+        string lastInput = OperationEntry.Text.Substring(OperationEntry.Text.Length - 1);
+
+        switch (lastInput)
+        {
+            case "/":
+                ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel, true);
+                SaveButton.IsEnabled = false;
+                OperationEntry.Focus();
+                break;
+            case "*":
+                ButtonActions.ApplyOperator(MultiplyButton.Text, OperationEntry, OperationLabel, true);
+                SaveButton.IsEnabled = false;
+                OperationEntry.Focus();
+                break;
+            case "-":
+                ButtonActions.ApplyOperator(SubtractButton.Text, OperationEntry, OperationLabel, true);
+                SaveButton.IsEnabled = false;
+                OperationEntry.Focus();
+                break;
+            case "+":
+                ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel, true);
+                SaveButton.IsEnabled = false;
+                OperationEntry.Focus();
+                break;
+            case "=":
+                ButtonActions.DisplayResult(OperationEntry, OperationLabel, true);
+                SaveButton.IsEnabled = true;
+                OperationEntry.Focus();
+                break;
+            default:
+                return;
+        }
+    }
+
     /// <summary>
     /// Shows or hides the additional buttons.
     /// </summary>
@@ -63,6 +124,7 @@ public partial class CalculatorPage : ContentPage
             MoreButton.Text = "More";
             ShowMoreOptions(false);
         }
+        OperationEntry.Focus();
     }
 
     /// <summary>
@@ -72,14 +134,23 @@ public partial class CalculatorPage : ContentPage
     /// <param name="e"></param>
     private void OnClearButtonClicked(object sender, EventArgs e)
     {
+        if (DecimalPrecisionOn)
+        {
+            ButtonActions.ClearCalculator(OperationEntry, OperationLabel);
+            OperationEntry.Focus();
+            return;
+        }
+
         if (!RandomOn)
         {
             ButtonActions.ClearCalculator(OperationEntry, OperationLabel, true);
+            OperationEntry.Focus();
             return;
         }
             
         ButtonActions.ClearCalculator(RandomEntryFrom, OperationLabel);
         ButtonActions.ClearCalculator(RandomEntryTo, OperationLabel);
+        RandomEntryFrom.Focus();
     }
 
     /// <summary>
@@ -92,13 +163,21 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.ClearCalculator(OperationEntry, OperationLabel);
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.ClearCalculator(RandomEntryFrom, OperationLabel);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.ClearCalculator(RandomEntryTo, OperationLabel);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -111,13 +190,21 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.Delete(OperationEntry);
+            OperationEntry.Focus();
             return;
         }
             
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.Delete(RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.Delete(RandomEntryTo);
+            RandomEntryTo.Focus();
+        } 
     }
 
     /// <summary>
@@ -128,7 +215,11 @@ public partial class CalculatorPage : ContentPage
     private void OnSquareButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplySingleVariableOperation(OperationEntry, SquareButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
     }
 
     /// <summary>
@@ -139,18 +230,45 @@ public partial class CalculatorPage : ContentPage
     private void OnSqrtButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplySingleVariableOperation(OperationEntry, SqrtButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }   
     }
 
     /// <summary>
-    /// Convert the content of the operation entry to a percentage.
+    /// Switches the calculator to the decimal precision setting mode.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnPercentageButtonClicked(object sender, EventArgs e)
+    private void OnDecimalPrecisionButtonClicked(object sender, EventArgs e)
     {
-        if (!RandomOn)
-            ButtonActions.ApplySingleVariableOperation(OperationEntry, PercentageButton.Text);
+        if (RandomOn)
+            return;
+
+        if (!DecimalPrecisionOn)
+        {
+            DecimalPrecisionOn = true;
+            CurrentValue = 0;
+            LastOperation = "";
+            OperationLabel.Text = "Decimal precision:";
+            OperationEntry.Text = "";
+            DecimalPrecisionButton.Text = "Apply";
+            SwitchButtons(true, false);
+        }
+        else
+        {
+            if (ButtonActions.ChangeDecimalPrecision(OperationEntry))
+            {
+                DecimalPrecisionOn = false;
+                OperationLabel.Text = "";
+                OperationEntry.Text = "";
+                DecimalPrecisionButton.Text = "DP";
+                SwitchButtons(false, false);
+            }
+        }
+        OperationEntry.Focus();
     }
 
     /// <summary>
@@ -161,7 +279,11 @@ public partial class CalculatorPage : ContentPage
     private void OnDivideButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        } 
     }
 
     /// <summary>
@@ -172,7 +294,11 @@ public partial class CalculatorPage : ContentPage
     private void OnMultiplyButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplyOperator(MultiplyButton.Text, OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        } 
     }
 
     /// <summary>
@@ -183,7 +309,11 @@ public partial class CalculatorPage : ContentPage
     private void OnSubtractButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplyOperator(SubtractButton.Text, OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
     }
 
     /// <summary>
@@ -194,7 +324,11 @@ public partial class CalculatorPage : ContentPage
     private void OnAddButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }   
     }
 
     /// <summary>
@@ -207,6 +341,8 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayResult(OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = true;
+            OperationEntry.Focus();
             return;
         }
 
@@ -217,10 +353,16 @@ public partial class CalculatorPage : ContentPage
         _randomEntryToWasFocused = false;
         RandomEntryFrom.Text = "";
         RandomEntryTo.Text = "";
-        SwitchButtons(false, true);
+        SwitchButtons(false);
 
         if (randomSuccessful)
-            OperationEntry.Text = CurrentValue.ToString();
+        {
+            if (DecimalPrecision > 0)
+                OperationEntry.Text = CurrentValue.ToString($"N{DecimalPrecision}");
+            else
+                OperationEntry.Text = CurrentValue.ToString();
+        }
+        OperationEntry.Focus();
     }
 
     /// <summary>
@@ -233,13 +375,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.ChangeSign(OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.ChangeSign(RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.ChangeSign(RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -250,7 +401,11 @@ public partial class CalculatorPage : ContentPage
     private void OnPointButtonClicked(object sender, EventArgs e)
     {
         if (!RandomOn)
+        {
             ButtonActions.DisplayNumber(PointButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
     }
 
     /// <summary>
@@ -263,13 +418,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(ZeroButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(ZeroButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(ZeroButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -282,13 +446,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(OneButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
         
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(OneButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(OneButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        } 
     }
 
     /// <summary>
@@ -301,13 +474,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(TwoButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(TwoButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(TwoButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        } 
     }
 
     /// <summary>
@@ -320,13 +502,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(ThreeButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(ThreeButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(ThreeButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -339,13 +530,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(FourButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(FourButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(FourButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -358,13 +558,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(FiveButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(FiveButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(FiveButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }   
     }
 
     /// <summary>
@@ -377,13 +586,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(SixButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(SixButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(SixButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        } 
     }
 
     /// <summary>
@@ -396,13 +614,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(SevenButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(SevenButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(SevenButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
     }
 
     /// <summary>
@@ -415,13 +642,22 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(EightButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
             return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(EightButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(EightButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        } 
     }
 
     /// <summary>
@@ -434,61 +670,65 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.DisplayNumber(NineButton.Text, OperationEntry);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+            return;
         }
 
         if (_randomEntryFromWasFocused)
+        {
             ButtonActions.DisplayNumber(NineButton.Text, RandomEntryFrom);
+            RandomEntryFrom.Focus();
+        }
+            
         if (_randomEntryToWasFocused)
+        {
             ButtonActions.DisplayNumber(NineButton.Text, RandomEntryTo);
+            RandomEntryTo.Focus();
+        }
+    }
+
+    private void OnSaveButtonClicked(object sender, EventArgs e)
+    {
+        
     }
 
     /// <summary>
-    /// Converts the number in the operation entry to hexadecimal.
+    /// Switches buttons on/off depending on the specific options being on/off.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnHexButtonClicked(object sender, EventArgs e)
+    /// <param name="setActive"></param>
+    /// <param name="isRandom"></param>
+    private void SwitchButtons(bool setActive, bool isRandom = true)
     {
-        if (!RandomOn)
-            ButtonActions.ApplySingleVariableOperation(OperationEntry, HexButton.Text);
-    }
+        SaveButton.IsEnabled = !setActive;
+        HexButton.IsEnabled = !setActive;
+        BinButton.IsEnabled = !setActive;
+        SquareButton.IsEnabled = !setActive;
+        SqrtButton.IsEnabled = !setActive;
+        DivideButton.IsEnabled = !setActive;
+        MultiplyButton.IsEnabled = !setActive;
+        SubtractButton.IsEnabled = !setActive;
+        AddButton.IsEnabled = !setActive;
+        PointButton.IsEnabled = !setActive;
 
-    /// <summary>
-    /// Converts the number in the operation entry to binary.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnBinButtonClicked(object sender, EventArgs e)
-    {
-        if (!RandomOn)
-            ButtonActions.ApplySingleVariableOperation(OperationEntry, BinButton.Text);
-    }
+        if (isRandom)
+        {
+            DecimalPrecisionButton.IsEnabled = !setActive;
 
-    /// <summary>
-    /// Switches buttons on/off depending on the random option being on/off.
-    /// </summary>
-    /// <param name="randomButtonsValue"></param>
-    /// <param name="otherButtonsValue"></param>
-    private void SwitchButtons(bool randomButtonsValue, bool otherButtonsValue)
-    {
-        HexButton.IsEnabled = otherButtonsValue;
-        BinButton.IsEnabled = otherButtonsValue;
-        SquareButton.IsEnabled = otherButtonsValue;
-        SqrtButton.IsEnabled = otherButtonsValue;
-        PercentageButton.IsEnabled = otherButtonsValue;
-        DivideButton.IsEnabled = otherButtonsValue;
-        MultiplyButton.IsEnabled = otherButtonsValue;
-        SubtractButton.IsEnabled = otherButtonsValue;
-        AddButton.IsEnabled = otherButtonsValue;
-        PointButton.IsEnabled = otherButtonsValue;
+            OperationEntry.IsVisible = !setActive;
+            OperationLabel.IsVisible = !setActive;
 
-        OperationEntry.IsVisible = otherButtonsValue;
-        OperationLabel.IsVisible = otherButtonsValue;
-
-        RandomEntryFrom.IsVisible = randomButtonsValue;
-        RandomEntryTo.IsVisible = randomButtonsValue;
-        RandomLabelFrom.IsVisible = randomButtonsValue;
-        RandomLabelTo.IsVisible = randomButtonsValue;
+            RandomEntryFrom.IsVisible = setActive;
+            RandomEntryTo.IsVisible = setActive;
+            RandomLabelFrom.IsVisible = setActive;
+            RandomLabelTo.IsVisible = setActive;
+        }
+        else
+        {
+            RandomButton.IsEnabled = !setActive;
+            SignButton.IsEnabled = !setActive;
+            EqualsButton.IsEnabled = !setActive;
+        }
     }
 
     /// <summary>
@@ -531,12 +771,44 @@ public partial class CalculatorPage : ContentPage
             _randomEntryToWasFocused = false;
             RandomEntryFrom.Text = "";
             RandomEntryTo.Text = "";
-            SwitchButtons(false, true);
+            SwitchButtons(false);
+            OperationEntry.Focus();
         }
         else
         {
             RandomOn = true;
-            SwitchButtons(true, false);
+            SwitchButtons(true);
+            RandomEntryFrom.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Converts the number in the operation entry to hexadecimal.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnHexButtonClicked(object sender, EventArgs e)
+    {
+        if (!RandomOn)
+        {
+            ButtonActions.ApplySingleVariableOperation(OperationEntry, HexButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Converts the number in the operation entry to binary.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnBinButtonClicked(object sender, EventArgs e)
+    {
+        if (!RandomOn)
+        {
+            ButtonActions.ApplySingleVariableOperation(OperationEntry, BinButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
         }
     }
 }

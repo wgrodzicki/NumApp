@@ -10,7 +10,6 @@ internal class Operations
     private const string Division = "÷";
     private const string Square = "x^2";
     private const string SquareRoot = "√x";
-    private const string Percentage = "%";
     private const string Hexadecimal = "Hex";
     private const string Binary = "Bin";
 
@@ -79,13 +78,19 @@ internal class Operations
     }
 
     /// <summary>
-    /// Returns the given number multiplied by 100.
+    /// Returns a random integer between x and y (inclusive).
     /// </summary>
     /// <param name="x"></param>
+    /// <param name="y"></param>
     /// <returns></returns>
-    internal static double GetPercentage(double x)
+    internal static int GetRandom(double x, double y)
     {
-        return x * 100.0;
+        int xInt = (int)x;
+        int yInt = (int)y;
+
+        Random random = new Random();
+        int result = random.Next(xInt, yInt + 1);
+        return result;
     }
 
     /// <summary>
@@ -98,9 +103,7 @@ internal class Operations
         string input = x.ToString();
 
         if (input.Contains('.'))
-        {
             return "Only integers";
-        }
 
         string hexReversed = "";
         int xInt = (int)x;
@@ -120,14 +123,13 @@ internal class Operations
                 "10" => "A",
                 _ => hexRemainder
             };
+
             hexReversed += hexRemainder;
 
             xInt /= 16;
 
             if (xInt < 1)
-            {
                 break;
-            }
         }
 
         char[] hexReversedArray = hexReversed.ToCharArray();
@@ -147,9 +149,7 @@ internal class Operations
         string input = x.ToString();
 
         if (input.Contains('.'))
-        {
             return "Only integers";
-        }
 
         string binReversed = "";
         int xInt = (int)x;
@@ -173,22 +173,6 @@ internal class Operations
         string binConverted = new string(binReversedArray);
 
         return $"0b{binConverted}";
-    }
-    
-    /// <summary>
-    /// Returns a random integer between x and y (inclusive).
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    internal static int GetRandom(double x, double y)
-    {
-        int xInt = (int)x;
-        int yInt = (int)y;
-        
-        Random random = new Random();
-        int result = random.Next(xInt, yInt + 1);
-        return result;
     }
 
     /// <summary>
@@ -232,9 +216,6 @@ internal class Operations
                 break;
             case SquareRoot:
                 operationEntry.Text = GetSquareRoot(value).ToString();
-                break;
-            case Percentage:
-                operationEntry.Text = GetPercentage(value).ToString();
                 break;
             case Hexadecimal:
                 operationEntry.Text = GetHexadecimal(value);

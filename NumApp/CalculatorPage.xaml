@@ -26,7 +26,7 @@
 
                 <Label
                     x:Name="RandomLabelFrom"
-                    Text="From"
+                    Text="From:"
                     TextColor="White"
                     FontSize="16"
                     IsVisible="false"
@@ -37,7 +37,7 @@
 
                 <Label
                     x:Name="RandomLabelTo"
-                    Text="To"
+                    Text="To:"
                     TextColor="White"
                     FontSize="16"
                     IsVisible="false"
@@ -55,7 +55,8 @@
                     HorizontalTextAlignment="End"
                     MinimumHeightRequest="80"
                     Grid.Row="1"
-                    Grid.ColumnSpan="4" />
+                    Grid.ColumnSpan="4"
+                    TextChanged="CheckKeyboardInput" />
 
                 <Entry
                     x:Name="RandomEntryFrom"
@@ -128,7 +129,8 @@
                     IsVisible="false"
                     Grid.Row="3"
                     Grid.Column="0"
-                    Grid.ColumnSpan="1" />
+                    Grid.ColumnSpan="1"
+                    Clicked="OnSaveButtonClicked" />
 
                 <Button
                     x:Name="RandomButton"
@@ -180,13 +182,13 @@
                     Clicked="OnSqrtButtonClicked" />
 
                 <Button
-                    x:Name="PercentageButton"
-                    Text="%"
-                    FontSize="20"
+                    x:Name="DecimalPrecisionButton"
+                    Text="DP"
+                    FontSize="14"
                     Grid.Row="4"
                     Grid.Column="2"
                     Grid.ColumnSpan="1"
-                    Clicked="OnPercentageButtonClicked" />
+                    Clicked="OnDecimalPrecisionButtonClicked" />
 
                 <Button
                     x:Name="DivideButton"
