@@ -2,7 +2,7 @@
 
 "NumApp" is a user-friendly calculator that allows to perform basic mathematical operations. It is also enriched with useful features not always present in similar applications.
 
-![](MathOrWords/Resources/Images/main_menu.PNG)
+![Main sample](NumApp/Resources/Images/main_sample.png)
 
 ## **Technical side of things**
 
@@ -17,6 +17,8 @@ The calculator allows to perform all basic mathematical operations (addition, su
 #### Decimal precision
 
 The *DP* (decimal precision) button allows the user to set a custom range of decimal precision of the calculations.
+
+![DP sample](NumApp/Resources/Images/decimal_precision.gif)
 
 #### Additional options
 
