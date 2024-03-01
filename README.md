@@ -2,7 +2,7 @@
 
 "NumApp" is a user-friendly calculator that allows to perform basic mathematical operations. It is also enriched with useful features not always present in similar applications.
 
-![Main sample](NumApp/Resources/Images/main_sample.png)
+![Main sample](NumApp/Resources/Images/main.png)
 
 ## **Technical side of things**
 
@@ -18,13 +18,19 @@ The calculator allows to perform all basic mathematical operations (addition, su
 
 The *DP* (decimal precision) button allows the user to set a custom range of decimal precision of the calculations.
 
-![DP sample](NumApp/Resources/Images/decimal_precision.gif)
+![DP sample](NumApp/Resources/Images/decimal_precision.png)
 
 #### Additional options
 
 The *More* button enables access to additional options:
+
+![More sample](NumApp/Resources/Images/more_options.png)
+
 - *Save* allows to save all finished calculations to a locally stored JSON file.
 - *Random* switches the calculator to a random generator mode which allows to get a random number within the desired range.
+
+![Random sample](NumApp/Resources/Images/random.png)
+
 - *Hex* converts the current number to hexadecimal.
 - *Bin* converts the current number to binary.
 
