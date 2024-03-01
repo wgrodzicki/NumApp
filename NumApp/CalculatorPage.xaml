@@ -341,10 +341,6 @@
                     Grid.ColumnSpan="1"
                     Clicked="OnEqualsButtonClicked" />
 
-
-
-
-
             </Grid>
 
 

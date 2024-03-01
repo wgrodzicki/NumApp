@@ -1,4 +1,5 @@
-﻿using NumApp.Helpers;
+﻿using Newtonsoft.Json;
+using NumApp.Helpers;
 
 namespace NumApp;
 
@@ -6,7 +7,9 @@ public partial class CalculatorPage : ContentPage
 {
     public static double CurrentValue { get; set; }
     public static string LastOperation { get; set; }
-    public static List<string> Operations { get; set; }
+    public static List<string> Calculations { get; set; }
+    public static List<string> CurrentCalculation { get; set; }
+    public static JsonWriter Writer { get; set; }
     public static int DecimalPrecision { get; set; }
 
     public bool RandomOn { get; set; }
@@ -25,15 +28,33 @@ public partial class CalculatorPage : ContentPage
 
         CurrentValue = 0;
         LastOperation = "";
-        Operations = new List<string>();
+        Calculations = new List<string>();
+        CurrentCalculation = new List<string>();
         DecimalPrecision = 0;
 
         RandomOn = false;
         DecimalPrecisionOn = false;
         moreOptionsButtons = new List<Button>() { SaveButton, RandomButton, HexButton, BinButton };
 
+        // Save json file at C:\Users\Username\AppData\Local\Packages\com.companyname.numapp_9zz4h110yvjzm\LocalCache\Local\numapplog.json
+        string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "numapplog.json");
+        StreamWriter logFile = File.CreateText(filePath);
+        logFile.AutoFlush = true;
+        Writer = new JsonTextWriter(logFile);
+        Writer.Formatting = Formatting.Indented;
+        Writer.WriteStartObject();
+        Writer.WritePropertyName("Calculations");
+        Writer.WriteStartArray();
+
         SaveButton.IsEnabled = false;
         OperationEntry.Loaded += (s, e) => { OperationEntry.Focus(); };
+    }
+
+    protected override void OnDisappearing()
+    {
+        Writer.WriteEndArray();
+        Writer.WriteEndObject();
+        Writer.Close();
     }
 
     /// <summary>
@@ -144,6 +165,7 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.ClearCalculator(OperationEntry, OperationLabel, true);
+            SaveButton.IsEnabled = false;
             OperationEntry.Focus();
             return;
         }
@@ -163,6 +185,7 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.ClearCalculator(OperationEntry, OperationLabel);
+            SaveButton.IsEnabled = false;
             OperationEntry.Focus();
             return;
         }
@@ -190,6 +213,7 @@ public partial class CalculatorPage : ContentPage
         if (!RandomOn)
         {
             ButtonActions.Delete(OperationEntry);
+            SaveButton.IsEnabled = false;
             OperationEntry.Focus();
             return;
         }
@@ -205,6 +229,136 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.Delete(RandomEntryTo);
             RandomEntryTo.Focus();
         } 
+    }
+
+    /// <summary>
+    /// Saves all finished calculations since the app was started.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnSaveButtonClicked(object sender, EventArgs e)
+    {
+        ButtonActions.SaveCalculations();
+        SaveButton.IsEnabled = false;
+    }
+
+    /// <summary>
+    /// Switches buttons on/off depending on the specific options being on/off.
+    /// </summary>
+    /// <param name="setActive"></param>
+    /// <param name="isRandom"></param>
+    private void SwitchButtons(bool setActive, bool isRandom = true)
+    {
+        SaveButton.IsEnabled = !setActive;
+        HexButton.IsEnabled = !setActive;
+        BinButton.IsEnabled = !setActive;
+        SquareButton.IsEnabled = !setActive;
+        SqrtButton.IsEnabled = !setActive;
+        DivideButton.IsEnabled = !setActive;
+        MultiplyButton.IsEnabled = !setActive;
+        SubtractButton.IsEnabled = !setActive;
+        AddButton.IsEnabled = !setActive;
+        PointButton.IsEnabled = !setActive;
+
+        if (isRandom)
+        {
+            DecimalPrecisionButton.IsEnabled = !setActive;
+
+            OperationEntry.IsVisible = !setActive;
+            OperationLabel.IsVisible = !setActive;
+
+            RandomEntryFrom.IsVisible = setActive;
+            RandomEntryTo.IsVisible = setActive;
+            RandomLabelFrom.IsVisible = setActive;
+            RandomLabelTo.IsVisible = setActive;
+        }
+        else
+        {
+            RandomButton.IsEnabled = !setActive;
+            SignButton.IsEnabled = !setActive;
+            EqualsButton.IsEnabled = !setActive;
+        }
+    }
+
+    /// <summary>
+    /// Updates the last focused random entry to the random from entry.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void RandomEntryFrom_Focused(object sender, FocusEventArgs e)
+    {
+        _randomEntryFromWasFocused = true;
+        _randomEntryToWasFocused = false;
+    }
+
+    /// <summary>
+    /// Updates the last focused random entry to the random to entry.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void RandomEntryTo_Focused(object sender, FocusEventArgs e)
+    {
+        _randomEntryToWasFocused = true;
+        _randomEntryFromWasFocused = false;
+    }
+
+    /// <summary>
+    /// Switches the calculator to the random generator mode.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnRandomButtonClicked(object sender, EventArgs e)
+    {
+        CurrentValue = 0;
+        LastOperation = "";
+        OperationEntry.Text = "";
+
+        if (RandomOn)
+        {
+            RandomOn = false;
+            _randomEntryFromWasFocused = false;
+            _randomEntryToWasFocused = false;
+            RandomEntryFrom.Text = "";
+            RandomEntryTo.Text = "";
+            SwitchButtons(false);
+            OperationEntry.Focus();
+        }
+        else
+        {
+            RandomOn = true;
+            SwitchButtons(true);
+            RandomEntryFrom.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Converts the number in the operation entry to hexadecimal.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnHexButtonClicked(object sender, EventArgs e)
+    {
+        if (!RandomOn)
+        {
+            ButtonActions.ApplySingleVariableOperation(OperationEntry, HexButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Converts the number in the operation entry to binary.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnBinButtonClicked(object sender, EventArgs e)
+    {
+        if (!RandomOn)
+        {
+            ButtonActions.ApplySingleVariableOperation(OperationEntry, BinButton.Text);
+            SaveButton.IsEnabled = false;
+            OperationEntry.Focus();
+        }
     }
 
     /// <summary>
@@ -685,130 +839,6 @@ public partial class CalculatorPage : ContentPage
         {
             ButtonActions.DisplayNumber(NineButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        }
-    }
-
-    private void OnSaveButtonClicked(object sender, EventArgs e)
-    {
-        
-    }
-
-    /// <summary>
-    /// Switches buttons on/off depending on the specific options being on/off.
-    /// </summary>
-    /// <param name="setActive"></param>
-    /// <param name="isRandom"></param>
-    private void SwitchButtons(bool setActive, bool isRandom = true)
-    {
-        SaveButton.IsEnabled = !setActive;
-        HexButton.IsEnabled = !setActive;
-        BinButton.IsEnabled = !setActive;
-        SquareButton.IsEnabled = !setActive;
-        SqrtButton.IsEnabled = !setActive;
-        DivideButton.IsEnabled = !setActive;
-        MultiplyButton.IsEnabled = !setActive;
-        SubtractButton.IsEnabled = !setActive;
-        AddButton.IsEnabled = !setActive;
-        PointButton.IsEnabled = !setActive;
-
-        if (isRandom)
-        {
-            DecimalPrecisionButton.IsEnabled = !setActive;
-
-            OperationEntry.IsVisible = !setActive;
-            OperationLabel.IsVisible = !setActive;
-
-            RandomEntryFrom.IsVisible = setActive;
-            RandomEntryTo.IsVisible = setActive;
-            RandomLabelFrom.IsVisible = setActive;
-            RandomLabelTo.IsVisible = setActive;
-        }
-        else
-        {
-            RandomButton.IsEnabled = !setActive;
-            SignButton.IsEnabled = !setActive;
-            EqualsButton.IsEnabled = !setActive;
-        }
-    }
-
-    /// <summary>
-    /// Updates the last focused random entry to the random from entry.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void RandomEntryFrom_Focused(object sender, FocusEventArgs e)
-    {
-        _randomEntryFromWasFocused = true;
-        _randomEntryToWasFocused = false;
-    }
-
-    /// <summary>
-    /// Updates the last focused random entry to the random to entry.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void RandomEntryTo_Focused(object sender, FocusEventArgs e)
-    {
-        _randomEntryToWasFocused = true;
-        _randomEntryFromWasFocused = false;
-    }
-
-    /// <summary>
-    /// Switches the calculator to the random generator mode.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnRandomButtonClicked(object sender, EventArgs e)
-    {
-        CurrentValue = 0;
-        LastOperation = "";
-        OperationEntry.Text = "";
-
-        if (RandomOn)
-        {
-            RandomOn = false;
-            _randomEntryFromWasFocused = false;
-            _randomEntryToWasFocused = false;
-            RandomEntryFrom.Text = "";
-            RandomEntryTo.Text = "";
-            SwitchButtons(false);
-            OperationEntry.Focus();
-        }
-        else
-        {
-            RandomOn = true;
-            SwitchButtons(true);
-            RandomEntryFrom.Focus();
-        }
-    }
-
-    /// <summary>
-    /// Converts the number in the operation entry to hexadecimal.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnHexButtonClicked(object sender, EventArgs e)
-    {
-        if (!RandomOn)
-        {
-            ButtonActions.ApplySingleVariableOperation(OperationEntry, HexButton.Text);
-            SaveButton.IsEnabled = false;
-            OperationEntry.Focus();
-        }
-    }
-
-    /// <summary>
-    /// Converts the number in the operation entry to binary.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnBinButtonClicked(object sender, EventArgs e)
-    {
-        if (!RandomOn)
-        {
-            ButtonActions.ApplySingleVariableOperation(OperationEntry, BinButton.Text);
-            SaveButton.IsEnabled = false;
-            OperationEntry.Focus();
         }
     }
 }

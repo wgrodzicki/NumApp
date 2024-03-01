@@ -14,6 +14,9 @@ internal class ButtonActions
 
         if (clearAll)
         {
+            if (!String.IsNullOrEmpty(operationEntry.Text))
+                CalculatorPage.CurrentCalculation.Clear();
+
             operationLabel.Text = "";
             CalculatorPage.LastOperation = "";
             CalculatorPage.CurrentValue = 0;
@@ -72,9 +75,13 @@ internal class ButtonActions
             }
             else
             {
-                // Keep current operation for saving
-                int operationNumber = CalculatorPage.Operations.Count + 1;
-                CalculatorPage.Operations.Add($"Operation {operationNumber.ToString()}: {operationLabel.Text}{input.ToString()}");
+                // Keep current operation for future saving
+                if (CalculatorPage.CurrentCalculation.Count == 0)
+                {
+                    // Store date if starting a new calculation
+                    CalculatorPage.CurrentCalculation.Add(DateTime.Now.ToString());
+                }
+                CalculatorPage.CurrentCalculation.Add($"{operationLabel.Text}{input.ToString()}");
 
                 operationLabel.Text = (CalculatorPage.CurrentValue.ToString() + $" {buttonOperator} ");
             }
@@ -95,6 +102,18 @@ internal class ButtonActions
     internal static void DisplayNumber(string buttonNumber, Entry operationEntry)
     {
         operationEntry.Text += $"{buttonNumber}";
+    }
+
+    /// <summary>
+    /// Stores a finished calculation for future saving and prepares space for the next calculation to be stored.
+    /// </summary>
+    private static void StoreCalculation()
+    {
+        foreach(string operation in CalculatorPage.CurrentCalculation)
+        {
+            CalculatorPage.Calculations.Add(operation);
+        }
+        CalculatorPage.CurrentCalculation.Clear();
     }
 
     /// <summary>
@@ -136,10 +155,12 @@ internal class ButtonActions
             }
             else
             {
-                // Keep current result for saving
                 operationEntry.Text = CalculatorPage.CurrentValue.ToString();
-                CalculatorPage.Operations.Add($"Result: {operationEntry.Text}");
             }
+
+            // Keep current result for future saving
+            CalculatorPage.CurrentCalculation.Add(CalculatorPage.CurrentValue.ToString());
+            StoreCalculation();
         }
 
         operationLabel.Text = "";
@@ -211,6 +232,45 @@ internal class ButtonActions
             Operations.UpdateOperationEntryValue(operationEntry, operation, input);
         else
             operationEntry.Text = "";
+    }
+
+    /// <summary>
+    /// Writes all finished calculations to a json file in the format of: date - operations - result (for each calculation).
+    /// </summary>
+    internal static void SaveCalculations()
+    {
+        bool operationBeingWritten = false;
+
+        foreach (string operation in CalculatorPage.Calculations)
+        {
+            // Check for date as the starting point
+            if (operation.Contains(':') || operation.Contains('/'))
+            {
+                if (!operationBeingWritten)
+                {
+                    CalculatorPage.Writer.WriteStartObject();
+                    operationBeingWritten = true;
+
+                    CalculatorPage.Writer.WritePropertyName("Date");
+                    CalculatorPage.Writer.WriteValue(operation);
+                }
+            }
+            // Check for operations
+            else if (operation.Contains('+') || operation.Contains('-') || operation.Contains('×') || operation.Contains('÷'))
+            {
+                CalculatorPage.Writer.WritePropertyName("Operation");
+                CalculatorPage.Writer.WriteValue(operation);
+            }
+            // Otherwise, write the result and end current calculation
+            else
+            {
+                CalculatorPage.Writer.WritePropertyName("Result");
+                CalculatorPage.Writer.WriteValue(operation);
+                CalculatorPage.Writer.WriteEndObject();
+                operationBeingWritten = false;
+            }
+        }
+        CalculatorPage.Calculations.Clear();
     }
 
     /// <summary>

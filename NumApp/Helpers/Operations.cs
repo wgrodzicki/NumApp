@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace NumApp.Helpers;
+﻿namespace NumApp.Helpers;
 
 internal class Operations
 {
