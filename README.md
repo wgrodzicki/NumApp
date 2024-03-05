@@ -42,3 +42,7 @@ When implementing the project I stumbled upon several challenges:
 - _Order of operations_. I needed to find a way to ensure the mathematical order of operations was preserved even when performing several operations in a row. To achieve that I decided to allow only one operation at a time, update the result immediately and use the updated value in the next operation.
 - _Hex and binary conversion_. Converting a decimal value to hexadecimal or binary proved to be a little bit more complicated than I expected. The method I used was to divide the decimal value by 16 (for hexadecimal) or 2 (for binary), use the remainder to build the converted number (from the last to the first place) and repeat the process using the quotient of the division until reaching a value of 1 or less.
 - _Writing data to JSON_. Even though I used a Microsoft tutorial for writing data to JSON, the saving feature required me to develop a flexible system of storing the calculations performed by the user. I had to account for unfinished calculations (not valid for saving) and possible deletion of data in the middle of a calculation. I did this by creating 2 lists of operations: one for the current calculation and another one for finished (valid for saving) calculations that get added across the application lifecycle.
+
+## **Credits**
+
+Created by Wojciech Grodzicki.
