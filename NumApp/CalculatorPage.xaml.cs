@@ -36,6 +36,7 @@ public partial class CalculatorPage : ContentPage
         DecimalPrecisionOn = false;
         moreOptionsButtons = new List<Button>() { SaveButton, RandomButton, HexButton, BinButton };
 
+        // JSON handling info from: https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/tutorial-console-part-2?view=vs-2022
         // Save json file at C:\Users\Username\AppData\Local\Packages\com.companyname.numapp_9zz4h110yvjzm\LocalCache\Local\numapplog.json
         string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "numapplog.json");
         StreamWriter logFile = File.CreateText(filePath);
@@ -47,6 +48,8 @@ public partial class CalculatorPage : ContentPage
         Writer.WriteStartArray();
 
         SaveButton.IsEnabled = false;
+
+        // Technique borrowed from: https://learn.microsoft.com/en-us/answers/questions/1167870/net-maui-how-to-run-method-after-page-is-shown
         OperationEntry.Loaded += (s, e) => { OperationEntry.Focus(); };
     }
 

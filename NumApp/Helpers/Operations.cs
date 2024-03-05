@@ -93,6 +93,7 @@ internal class Operations
 
     /// <summary>
     /// Returns the given decimal number converted to hexadecimal (only integers allowed).
+    /// Conversion tips from: https://calculator.name/baseconvert/decimal/hexadecimal/3225
     /// </summary>
     /// <param name="x"></param>
     /// <returns></returns>
