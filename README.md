@@ -1,6 +1,6 @@
 # **NumApp**
 
-"NumApp" is a user-friendly calculator that allows to perform basic mathematical operations. It is also enriched with useful features not always present in similar applications.
+"NumApp" is a user-friendly calculator that allows to perform basic mathematical operations. It is also enriched with useful features not always present in similar applications. You can download a sideloading version of the app (Windows build) [here](https://www.dropbox.com/scl/fi/77srzt9r4t31brhwcxrbo/NumApp.7z?rlkey=nszqmf1loy7szaxfv0durnn13&dl=0).
 
 ![Main sample](NumApp/Resources/Images/main.png)
 
