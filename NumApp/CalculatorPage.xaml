@@ -120,7 +120,7 @@
                     Grid.Column="3"
                     Grid.ColumnSpan="1"
                     Clicked="OnDeleteButtonClicked" />
-                
+
                 <!--Row 3-->
                 <Button
                     x:Name="SaveButton"

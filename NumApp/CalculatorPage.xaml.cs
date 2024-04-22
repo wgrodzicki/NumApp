@@ -172,7 +172,7 @@ public partial class CalculatorPage : ContentPage
             OperationEntry.Focus();
             return;
         }
-            
+
         ButtonActions.ClearCalculator(RandomEntryFrom, OperationLabel);
         ButtonActions.ClearCalculator(RandomEntryTo, OperationLabel);
         RandomEntryFrom.Focus();
@@ -198,7 +198,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ClearCalculator(RandomEntryFrom, OperationLabel);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.ClearCalculator(RandomEntryTo, OperationLabel);
@@ -220,18 +220,18 @@ public partial class CalculatorPage : ContentPage
             OperationEntry.Focus();
             return;
         }
-            
+
         if (_randomEntryFromWasFocused)
         {
             ButtonActions.Delete(RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.Delete(RandomEntryTo);
             RandomEntryTo.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -391,7 +391,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ApplySingleVariableOperation(OperationEntry, SqrtButton.Text);
             SaveButton.IsEnabled = false;
             OperationEntry.Focus();
-        }   
+        }
     }
 
     /// <summary>
@@ -440,7 +440,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ApplyOperator(DivideButton.Text, OperationEntry, OperationLabel);
             SaveButton.IsEnabled = false;
             OperationEntry.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -455,7 +455,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ApplyOperator(MultiplyButton.Text, OperationEntry, OperationLabel);
             SaveButton.IsEnabled = false;
             OperationEntry.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -485,7 +485,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ApplyOperator(AddButton.Text, OperationEntry, OperationLabel);
             SaveButton.IsEnabled = false;
             OperationEntry.Focus();
-        }   
+        }
     }
 
     /// <summary>
@@ -542,7 +542,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.ChangeSign(RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.ChangeSign(RandomEntryTo);
@@ -585,7 +585,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(ZeroButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(ZeroButton.Text, RandomEntryTo);
@@ -607,18 +607,18 @@ public partial class CalculatorPage : ContentPage
             OperationEntry.Focus();
             return;
         }
-        
+
         if (_randomEntryFromWasFocused)
         {
             ButtonActions.DisplayNumber(OneButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(OneButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -641,12 +641,12 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(TwoButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(TwoButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -669,7 +669,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(ThreeButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(ThreeButton.Text, RandomEntryTo);
@@ -697,7 +697,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(FourButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(FourButton.Text, RandomEntryTo);
@@ -725,12 +725,12 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(FiveButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(FiveButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        }   
+        }
     }
 
     /// <summary>
@@ -753,12 +753,12 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(SixButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(SixButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -781,7 +781,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(SevenButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(SevenButton.Text, RandomEntryTo);
@@ -809,12 +809,12 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(EightButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(EightButton.Text, RandomEntryTo);
             RandomEntryTo.Focus();
-        } 
+        }
     }
 
     /// <summary>
@@ -837,7 +837,7 @@ public partial class CalculatorPage : ContentPage
             ButtonActions.DisplayNumber(NineButton.Text, RandomEntryFrom);
             RandomEntryFrom.Focus();
         }
-            
+
         if (_randomEntryToWasFocused)
         {
             ButtonActions.DisplayNumber(NineButton.Text, RandomEntryTo);

@@ -109,7 +109,7 @@ internal class ButtonActions
     /// </summary>
     private static void StoreCalculation()
     {
-        foreach(string operation in CalculatorPage.CurrentCalculation)
+        foreach (string operation in CalculatorPage.CurrentCalculation)
         {
             CalculatorPage.Calculations.Add(operation);
         }
@@ -167,7 +167,7 @@ internal class ButtonActions
         CalculatorPage.LastOperation = "";
         CalculatorPage.CurrentValue = 0;
     }
-    
+
     /// <summary>
     /// Changes the sign of the value in the operation entry to the opposite.
     /// </summary>
